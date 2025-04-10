@@ -8,7 +8,7 @@ setup(
     description="Extract and process text from images and PDFs",
     long_description=open(file="README.md", mode="r").read(),
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/Nikhil-K-Singh/textextraction/tree/main",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -24,4 +24,15 @@ setup(
         "pdf2image>=1.17.0,<2.0",
         "regex>=2024.0",
     ],
+    extras_require={
+        "dev": [
+            "pytest>=7.0.0",
+            "pytest-cov>=4.0.0",
+            "flake8>=6.0.0",
+            "black>=23.0.0",
+            "isort>=5.0.0",
+            "mypy>=1.0.0",
+            "sphinx>=7.0.0",
+        ],
+    },
 )

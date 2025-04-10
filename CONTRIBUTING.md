@@ -14,7 +14,7 @@ Thank you for considering contributing to TextExtraction!
 
 ```bash
 # Clone your fork
-git clone https://github.com/your-username/textextraction.git
+git clone https://github.com/Nikhil-K-Singh/textextraction.git
 cd textextraction
 
 # Create a virtual environment
