@@ -13,202 +13,179 @@ TextExtraction is a Python package for extracting and processing text from image
 
 ## Installation
 
-### Install from PyPI
+### 1. Install the package
 
 ```bash
 pip install textextraction
 ```
 
-Note: This package requires Tesseract OCR and Poppler to be installed on your system.
+### 2. Install system dependencies
 
-#### macOS:
+#### For Tesseract OCR:
+
+**macOS:**
 ```bash
-brew install tesseract poppler
+brew install tesseract
 ```
 
-#### Ubuntu/Debian:
+**Ubuntu/Debian:**
 ```bash
-apt-get update && apt-get install -y tesseract-ocr poppler-utils
+apt-get update && apt-get install -y tesseract-ocr
 ```
 
-#### Windows:
-- Install Tesseract OCR from: https://github.com/UB-Mannheim/tesseract/wiki
-- Install Poppler for Windows from: https://github.com/oschwartz10612/poppler-windows/releases/
+**Windows:**
+- Download and install from: https://github.com/UB-Mannheim/tesseract/wiki
+
+#### For EasyOCR:
+
+EasyOCR has its own dependencies that will be installed automatically when you install the package.
+
+#### For PDF processing:
+
+**macOS:**
+```bash
+brew install poppler
+```
+
+**Ubuntu/Debian:**
+```bash
+apt-get update && apt-get install -y poppler-utils
+```
+
+**Windows:**
+- Download from: https://github.com/oschwartz10612/poppler-windows/releases/
 
 ## Usage
 
-### Basic Usage
+### Converting Images to Markdown
 
-```python
-from TextExtraction import ImageText, PdfText, ScannedPdfText
-
-# Process an image
-image_processor = ImageText()
-image_processor.process_image(
-    image_path="path/to/image.png",
-    output_path="output_image.md",
-    filter_words=True
-)
-
-# Process a regular PDF
-pdf_processor = PdfText()
-pdf_processor.process_pdf(
-    pdf_path="path/to/document.pdf",
-    output_path="output_pdf.md",
-    filter_words=True
-)
-
-# Process a scanned PDF
-scanned_pdf_processor = ScannedPdfText()
-scanned_pdf_processor.process_pdf(
-    pdf_path="path/to/scanned_document.pdf",
-    output_path="output_scanned.md",
-    filter_words=True
-)
-```
-
-### ImageText Class
-
-The `ImageText` class extracts text from images using Optical Character Recognition (OCR).
+#### Using Tesseract OCR
 
 ```python
 from TextExtraction import ImageText
 
-image_text = ImageText()
+# Initialize with Tesseract OCR
+image_processor = ImageText(ocr_engine="tesseract")
 
-# Extract text from an image
-extracted_text = image_text.extract_from_image("path/to/image.png")
-
-# Filter text to keep only valid English words
-filtered_text = image_text.filter_english_words(extracted_text)
-
-# Convert to markdown
-markdown_text = image_text.to_markdown(filtered_text, title="Image Text")
-
-# Process an image and save the result to a file
-markdown_text = image_text.process_image(
+# Process an image and save to markdown
+image_processor.process_image(
     image_path="path/to/image.png",
-    output_path="output.md",
-    filter_words=True
+    output_path="output_image_tesseract.md"
+)
+
+# Optional: Customize line height for better text grouping
+image_processor = ImageText(ocr_engine="tesseract", line_height=30)
+image_processor.process_image(
+    image_path="path/to/image.png",
+    output_path="output_image_tesseract_custom.md"
 )
 ```
 
-### PdfText Class
-
-The `PdfText` class extracts text from regular PDFs while preserving the document structure.
+#### Using EasyOCR (default)
 
 ```python
-from TextExtraction import PdfText
+from TextExtraction import ImageText
 
-pdf_text = PdfText()
+# Initialize with EasyOCR (default)
+image_processor = ImageText()
 
-# Extract text from a PDF
-extracted_text = pdf_text.extract_from_pdf("path/to/document.pdf")
+# Process an image and save to markdown
+image_processor.process_image(
+    image_path="path/to/image.png",
+    output_path="output_image_easyocr.md"
+)
 
-# Filter text to keep only valid English words
-filtered_text = pdf_text.filter_english_words(extracted_text)
-
-# Convert to markdown
-markdown_text = pdf_text.to_markdown(filtered_text, title="PDF Text")
-
-# Process a PDF and save the result to a file
-markdown_text = pdf_text.process_pdf(
-    pdf_path="path/to/document.pdf",
-    output_path="output.md",
-    filter_words=True
+# Optional: Customize line height for better text grouping
+image_processor = ImageText(line_height=30)
+image_processor.process_image(
+    image_path="path/to/image.png",
+    output_path="output_image_easyocr_custom.md"
 )
 ```
 
-### ScannedPdfText Class
+### Converting Scanned PDFs to Markdown
 
-The `ScannedPdfText` class extracts text from scanned PDFs using OCR.
+#### Using Tesseract OCR
 
 ```python
 from TextExtraction import ScannedPdfText
 
-scanned_pdf_text = ScannedPdfText()
+# Initialize with Tesseract OCR
+pdf_processor = ScannedPdfText(ocr_engine="tesseract")
 
-# Extract text from a scanned PDF
-extracted_text = scanned_pdf_text.extract_from_pdf("path/to/scanned_document.pdf")
-
-# Filter text to keep only valid English words
-filtered_text = scanned_pdf_text.filter_english_words(extracted_text)
-
-# Convert to markdown
-markdown_text = scanned_pdf_text.to_markdown(filtered_text, title="Scanned PDF Text")
-
-# Process a scanned PDF and save the result to a file
-markdown_text = scanned_pdf_text.process_pdf(
+# Process a scanned PDF and save to markdown
+pdf_processor.process_pdf(
     pdf_path="path/to/scanned_document.pdf",
-    output_path="output.md",
-    filter_words=True
+    output_path="output_scanned_tesseract.md"
+)
+
+# Optional: Customize line height for better text grouping
+pdf_processor = ScannedPdfText(ocr_engine="tesseract", line_height=30)
+pdf_processor.process_pdf(
+    pdf_path="path/to/scanned_document.pdf",
+    output_path="output_scanned_tesseract_custom.md"
 )
 ```
 
-## Example
-
-Here's a complete example showing how to use all three classes:
+#### Using EasyOCR (default)
 
 ```python
-from TextExtraction import ImageText, PdfText, ScannedPdfText
+from TextExtraction import ScannedPdfText
 
-def process_image():
-    image_text = ImageText()
-    image_path = "test.png"
-    output_path = "image_output.md"
-    
-    markdown_text = image_text.process_image(
-        image_path=image_path,
-        output_path=output_path,
-        filter_words=True
-    )
-    print(f"Processed image and saved to {output_path}")
+# Initialize with EasyOCR (default)
+pdf_processor = ScannedPdfText()
 
-def process_pdf():
-    pdf_text = PdfText()
-    pdf_path = "sample.pdf"
-    output_path = "pdf_output.md"
-    
-    markdown_text = pdf_text.process_pdf(
-        pdf_path=pdf_path,
-        output_path=output_path,
-        filter_words=True
-    )
-    print(f"Processed PDF and saved to {output_path}")
+# Process a scanned PDF and save to markdown
+pdf_processor.process_pdf(
+    pdf_path="path/to/scanned_document.pdf",
+    output_path="output_scanned_easyocr.md"
+)
 
-def process_scanned_pdf():
-    scanned_pdf_text = ScannedPdfText()
-    pdf_path = "scanned_sample.pdf"
-    output_path = "scanned_pdf_output.md"
-    
-    markdown_text = scanned_pdf_text.process_pdf(
-        pdf_path=pdf_path,
-        output_path=output_path,
-        filter_words=True
-    )
-    print(f"Processed scanned PDF and saved to {output_path}")
-
-if __name__ == "__main__":
-    process_image()
-    process_pdf()
-    process_scanned_pdf()
+# Optional: Customize line height for better text grouping
+pdf_processor = ScannedPdfText(line_height=30)
+pdf_processor.process_pdf(
+    pdf_path="path/to/scanned_document.pdf",
+    output_path="output_scanned_easyocr_custom.md"
+)
 ```
 
-## Notes
+### Converting Regular PDFs to Markdown
 
-- The filtering process keeps valid English words, proper nouns, and technical terms with at least 3 characters.
-- The Markdown output preserves the original document structure with line breaks.
-- For scanned PDFs, the OCR process might not always perfectly recognize all text, especially with poor quality scans.
+```python
+from TextExtraction import PdfText
 
-## Requirements
+# Initialize the PDF processor
+pdf_processor = PdfText()
 
+# Process a PDF and save to markdown
+pdf_processor.process_pdf(
+    pdf_path="path/to/document.pdf",
+    output_path="output_pdf.md"
+)
+```
+
+## Dependencies
+
+### For Tesseract OCR:
 - Python 3.6+
-- NLTK
-- Pillow
-- pdfminer.six
 - pytesseract
-- pdf2image
+- Pillow (PIL)
 - Tesseract OCR (system dependency)
+
+### For EasyOCR:
+- Python 3.6+
+- easyocr
+- Pillow (PIL)
+- numpy
+- torch
+- torchvision
+
+### For PDF Processing:
+- Python 3.6+
+- pdfminer.six
+- pdf2image
 - Poppler (system dependency)
 
-See `requirements.txt` for specific version requirements.
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
