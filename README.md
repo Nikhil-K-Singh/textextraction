@@ -1,6 +1,6 @@
-# TextExtraction
+# textextraction
 
-TextExtraction is a Python package for extracting and processing text from images, PDFs, and scanned PDFs. It converts the extracted text into Markdown format while preserving the original text structure and filtering out non-English words.
+textextraction is a Python package for extracting and processing text from images, PDFs, and scanned PDFs. It converts the extracted text into Markdown format while preserving the original text structure and filtering out non-English words.
 
 ## Features
 
@@ -62,7 +62,7 @@ apt-get update && apt-get install -y poppler-utils
 #### Using Tesseract OCR
 
 ```python
-from TextExtraction import ImageText
+from textextraction import ImageText
 
 # Initialize with Tesseract OCR
 image_processor = ImageText(ocr_engine="tesseract")
@@ -84,7 +84,7 @@ image_processor.process_image(
 #### Using EasyOCR (default)
 
 ```python
-from TextExtraction import ImageText
+from textextraction import ImageText
 
 # Initialize with EasyOCR (default)
 image_processor = ImageText()
@@ -108,7 +108,7 @@ image_processor.process_image(
 #### Using Tesseract OCR
 
 ```python
-from TextExtraction import ScannedPdfText
+from textextraction import ScannedPdfText
 
 # Initialize with Tesseract OCR
 pdf_processor = ScannedPdfText(ocr_engine="tesseract")
@@ -130,7 +130,7 @@ pdf_processor.process_pdf(
 #### Using EasyOCR (default)
 
 ```python
-from TextExtraction import ScannedPdfText
+from textextraction import ScannedPdfText
 
 # Initialize with EasyOCR (default)
 pdf_processor = ScannedPdfText()
@@ -152,7 +152,7 @@ pdf_processor.process_pdf(
 ### Converting Regular PDFs to Markdown
 
 ```python
-from TextExtraction import PdfText
+from textextraction import PdfText
 
 # Initialize the PDF processor
 pdf_processor = PdfText()

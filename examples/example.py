@@ -1,4 +1,4 @@
-from TextExtraction import ImageText, PdfText, ScannedPdfText
+from textextraction import ImageText, PdfText, ScannedPdfText
 
 def process_with_tesseract():
     print("\n=== Processing with Tesseract OCR ===")

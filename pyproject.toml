@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["textextraction"]
+packages = ["textextraction","textextraction.engines"]
 
 [project]
 name = "textextraction"
@@ -37,6 +37,7 @@ dependencies = [
     "pytesseract>=0.3.0",
     "pdf2image>=1.17.0,<2.0",
     "regex>=2024.0",
+    "easyocr>=1.7.0",
 ]
 
 [project.optional-dependencies]
