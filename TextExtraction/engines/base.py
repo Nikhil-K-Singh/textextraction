@@ -3,21 +3,23 @@
 from abc import ABC, abstractmethod
 from PIL import Image
 
+
 class OCREngine(ABC):
     """Abstract base class for OCR engines.
-    
+
     This class defines the interface that all OCR engines must implement.
     It ensures consistent behavior across different OCR implementations.
     """
-    
+
     @abstractmethod
-    def extract_text(self, image):
+    def extract_text(self, image, **kwargs):
         """Extract text from an image.
-        
+
         Args:
             image (PIL.Image): The image to extract text from.
-            
+            **kwargs: Additional engine-specific parameters
+
         Returns:
             str: The extracted text with line breaks preserved.
         """
-        pass 
+        pass

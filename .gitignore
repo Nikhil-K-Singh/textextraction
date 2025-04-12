@@ -41,6 +41,27 @@ Thumbs.db
 .coverage
 htmlcov/
 .pytest_cache/
+*.md
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.webp
+*.heic
+*.heif
+*.hevc
+*.h264
+*.h265
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.wmv
+
 
 # Jupyter Notebooks
 .ipynb_checkpoints 
