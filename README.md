@@ -1,168 +1,200 @@
-# textextraction
+# Text Extraction
 
-A Python library for extracting text from images and PDFs, with support for various OCR engines and advanced table detection.
+A Python package for extracting text from various document formats, including PDFs, images, and scanned documents. The package supports table detection, OCR, and password-protected PDF handling.
 
 ## Features
 
-- Extract text from images and PDFs
-- Support for multiple OCR engines (Tesseract and EasyOCR)
-- Advanced table detection and extraction in documents
-- Support for mixed content (text and tables) on the same page
-- Markdown formatting for output
-- Filtering of non-English words
-- Table extraction from scanned documents
+- Extract text from regular PDFs
+- Process scanned PDFs using OCR
+- Extract text from images
+- Detect and extract tables from PDFs
+- Remove password protection from PDFs
+- Generate markdown output with proper formatting
+- Support for multiple OCR engines (Tesseract, EasyOCR)
+- Dictionary-based text correction
 
 ## Installation
 
 ```bash
-pip install textextraction
+# Clone the repository
+git clone https://github.com/yourusername/textextraction.git
+cd textextraction
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install the package
+pip install -e .
 ```
 
-### Requirements
+## Usage
 
-- Python 3.8+
-- For Tesseract support:
-  - Tesseract OCR installed on your system
-  - For macOS: `brew install tesseract`
-  - For Ubuntu/Debian: `sudo apt-get install tesseract-ocr`
-  - For Windows: [Download and install from here](https://github.com/UB-Mannheim/tesseract/wiki)
-- For EasyOCR support:
-  - No additional installation required - included in package dependencies
-- For PDF support:
-  - PyMuPDF (installed automatically)
-  - OpenCV (installed automatically)
-
-## Basic Usage
-
-### Extracting Text from an Image
-
-```python
-from textextraction import ImageText
-
-# Initialize with default engine (EasyOCR)
-processor = ImageText()
-
-# Process an image and save to markdown file
-processor.process_image(
-    image_path="path/to/your/image.jpg",
-    output_path="output.md"
-)
-
-# Or just get the extracted text
-text = processor.extract_from_image("path/to/your/image.jpg")
-print(text)
-```
-
-### Extracting Text from a Scanned PDF
-
-```python
-from textextraction import ScannedPdfText
-
-# Initialize with Tesseract engine (EasyOCR is default)
-processor = ScannedPdfText(ocr_engine="tesseract")
-
-# Process a scanned PDF and save to markdown file
-processor.process_pdf(
-    pdf_path="path/to/your/scanned.pdf",
-    output_path="output.md"
-)
-```
-
-### Extracting Text from a Regular (Non-Scanned) PDF
+### Basic PDF Text Extraction
 
 ```python
 from textextraction import PdfText
 
-# Initialize
-processor = PdfText()
+# Initialize the PDF processor
+pdf_processor = PdfText(add_page_number=True)
 
-# Process PDF and save to markdown
-processor.process_pdf(
-    pdf_path="path/to/your/document.pdf",
-    output_path="output.md"
-)
+# Extract text from a PDF
+pdf_processor.process("input.pdf", "output.md")
 ```
 
-## Advanced Usage
-
-### Working with Tables
-
-The library automatically detects and processes tables in documents, converting them to Markdown format:
+### Scanned PDF Processing
 
 ```python
 from textextraction import ScannedPdfText
 
-# Initialize with table detection enabled (default)
-processor = ScannedPdfText(table_detection=True)
+# Initialize the scanned PDF processor
+scanned_processor = ScannedPdfText(
+    add_page_number=True,
+    dictionary=True,  # Enable dictionary-based correction
+    add_metadata=True
+)
 
-# Process PDF with tables
-processor.process_pdf(
-    pdf_path="path/to/pdf_with_tables.pdf",
-    output_path="tables_output.md"
+# Process a scanned PDF
+scanned_processor.process("scanned.pdf", "output.md")
+```
+
+### Image Text Extraction
+
+```python
+from textextraction import ImageText
+
+# Initialize the image processor
+image_processor = ImageText(dictionary=True)
+
+# Extract text from an image
+image_processor.process("image.jpg", "output.md")
+```
+
+### Table Extraction
+
+```python
+from textextraction import PdfText
+
+# Initialize with table detection enabled
+pdf_processor = PdfText(table_detection=True)
+
+# Extract text and tables from a PDF
+pdf_processor.process("input.pdf", "output.md")
+```
+
+### PDF Unlocking
+
+```python
+from textextraction import PdfUnlocker
+
+# Initialize the PDF unlocker
+unlocker = PdfUnlocker()
+
+# Remove password protection
+unlocker.unlock("protected.pdf", "password", "unlocked.pdf")
+```
+
+### Command Line Interface
+
+The package also provides a command-line interface:
+
+```bash
+# Unlock a password-protected PDF
+python -m textextraction unlock input.pdf password -o output.pdf
+
+# Process a PDF with table detection
+python -m textextraction process input.pdf --table-detection -o output.md
+
+# Process a scanned PDF with OCR
+python -m textextraction process scanned.pdf --scanned --ocr -o output.md
+```
+
+## Advanced Options
+
+### PDF Processing
+
+```python
+from textextraction import PdfText
+
+# Initialize with custom options
+pdf_processor = PdfText(
+    add_page_number=True,      # Add page numbers to output
+    dictionary=True,           # Enable dictionary-based correction
+    add_metadata=True,         # Include PDF metadata
+    table_detection=True       # Enable table detection
+)
+
+# Process specific page range
+pdf_processor.process(
+    "input.pdf",
+    "output.md",
+    start_page=1,    # Start from page 1
+    end_page=5       # End at page 5
 )
 ```
 
-The library uses EasyOCR for table detection by default, as it provides better accuracy for tabular content. When using Tesseract as the main OCR engine, tables will still be processed with EasyOCR.
-
-### Processing Specific Page Ranges
+### Scanned PDF Processing
 
 ```python
 from textextraction import ScannedPdfText
 
-processor = ScannedPdfText()
+# Initialize with OCR options
+scanned_processor = ScannedPdfText(
+    add_page_number=True,
+    dictionary=True,
+    add_metadata=True,
+    table_detection=True,
+    ocr_engine="easyocr"  # Choose between "tesseract" or "easyocr"
+)
 
-# Process only pages 2-4
-processor.process_pdf(
-    pdf_path="path/to/document.pdf",
-    output_path="output.md",
-    start_page=2,
-    end_page=4
+# Process with custom page range
+scanned_processor.process(
+    "scanned.pdf",
+    "output.md",
+    start_page=1,
+    end_page=5
 )
 ```
 
-### Filtering Non-English Words
+## Output Format
 
-```python
-from textextraction import ScannedPdfText
+The package generates markdown output with the following features:
 
-# Enable word filtering during initialization
-processor = ScannedPdfText(filter_words=True)
+- Page numbers (if enabled)
+- Properly formatted tables
+- Preserved document structure
+- Metadata (if enabled)
+- Clean text formatting
 
-# Or specify during processing
-processor.process_pdf(
-    pdf_path="path/to/document.pdf",
-    output_path="output.md",
-    filter_words=True
-)
+Example output:
+```markdown
+# Document Title
+
+## Page 1
+
+This is the first page of the document.
+
+| Column 1 | Column 2 |
+|----------|----------|
+| Data 1   | Data 2   |
+| Data 3   | Data 4   |
+
+## Page 2
+
+This is the second page...
 ```
 
-### Adding Page Numbers
+## Dependencies
 
-```python
-from textextraction import ScannedPdfText
+- PyPDF2/pypdfium2 - PDF processing
+- Tesseract OCR - Text recognition
+- EasyOCR - Alternative OCR engine
+- Pillow - Image processing
+- NumPy - Numerical operations
+- OpenCV - Image processing
 
-# Enable page numbering
-processor = ScannedPdfText(add_page_number=True)
+## Contributing
 
-# Process the document
-processor.process_pdf(
-    pdf_path="path/to/document.pdf",
-    output_path="output.md"
-)
-```
-
-## OCR Engine Options
-
-### Tesseract
-- Good for general text extraction
-- Faster initialization
-- Requires system installation
-
-### EasyOCR (Default)
-- Better multilingual support
-- Superior table detection
-- Works well with complex layouts
-- Slower initialization but better accuracy
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
